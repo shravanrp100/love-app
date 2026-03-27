@@ -1,109 +1,127 @@
 from flask import Flask, request
+import os
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    name1 = request.args.get("name1", "Simran")
-    name2 = request.args.get("name2", "Nikhil")
+    name = request.args.get("name", "Someone Special")
 
     return f"""
     <html>
     <head>
-    <title>Engagement Wishes 💍</title>
+        <title>For You 💖</title>
 
-    <style>
-    body {{
-        text-align: center;
-        margin-top: 80px;
-        font-family: Arial;
-        background: linear-gradient(45deg, #ff758c, #ff7eb3);
-        overflow: hidden;
-    }}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    h1 {{
-        color: white;
-        font-size: 40px;
-    }}
+        <style>
+            body {{
+                text-align: center;
+                margin-top: 80px;
+                font-family: Arial;
+                background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+                overflow: hidden;
+            }}
 
-    p {{
-        color: white;
-        font-size: 22px;
-    }}
+            h1 {{
+                color: #fff;
+                font-size: 40px;
+                animation: glow 1s infinite alternate;
+            }}
 
-    button {{
-        padding: 15px 25px;
-        font-size: 18px;
-        background-color: #fff;
-        color: #ff4da6;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }}
+            @keyframes glow {{
+                from {{ text-shadow: 0 0 10px #fff; }}
+                to {{ text-shadow: 0 0 20px #ff4da6; }}
+            }}
 
-    .hidden {{
-        display: none;
-        font-size: 26px;
-        color: white;
-        margin-top: 20px;
-    }}
+            button {{
+                padding: 15px 25px;
+                font-size: 18px;
+                background-color: #ff4da6;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                margin-top: 20px;
+            }}
 
-    .heart {{
-        position: absolute;
-        color: red;
-        animation: float 5s linear infinite;
-    }}
+            .hidden {{
+                display: none;
+                font-size: 22px;
+                color: white;
+                margin-top: 20px;
+            }}
 
-    @keyframes float {{
-        0% {{ transform: translateY(100vh); opacity: 1; }}
-        100% {{ transform: translateY(-10vh); opacity: 0; }}
-    }}
-    </style>
+            .heart {{
+                position: absolute;
+                color: red;
+                animation: float 5s linear infinite;
+            }}
+
+            @keyframes float {{
+                0% {{ transform: translateY(100vh); opacity: 1; }}
+                100% {{ transform: translateY(-10vh); opacity: 0; }}
+            }}
+
+            .footer {{
+                position: fixed;
+                bottom: 10px;
+                width: 100%;
+                color: white;
+                font-size: 14px;
+            }}
+        </style>
     </head>
 
     <body>
 
-    <h1>💍 Congratulations {name1} & {name2} 💖</h1>
+        <h1>Hi {name} ❤️</h1>
+        <p style="color:white;font-size:20px;">You are my best friend 💖</p>
 
-    <p>Wishing you both a lifetime of love, happiness, and togetherness 💕</p>
+        <button onclick="showMessage()">Click Me 💌</button>
 
-    <button onclick="showMessage()">Click for Surprise 💌</button>
+        <div id="msg" class="hidden">
+            💖 I am lucky to have you in my life 💖 <br><br>
+            😊 Always stay happy 😊
+        </div>
 
-    <div id="msg" class="hidden">
-        💖 May your love grow stronger every day 💖 <br><br>
-        💫 Two hearts, one beautiful journey 💫 <br><br>
-        💍 Happy Engagement 💍
-    </div>
+        <audio id="music" loop>
+            <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+        </audio>
 
-    <audio autoplay loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-    </audio>
+        <div class="footer">
+            Made with ❤️ just for you
+        </div>
 
-    <script>
-    function showMessage() {{
-        document.getElementById("msg").style.display = "block";
-    }}
+        <script>
+            function showMessage() {{
+                document.getElementById("msg").style.display = "block";
 
-    function createHeart() {{
-        let heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = (Math.random() * 20 + 20) + "px";
-        document.body.appendChild(heart);
+                // Play music on click (mobile-friendly)
+                document.getElementById("music").play();
+            }}
 
-        setTimeout(() => {{
-            heart.remove();
-        }}, 5000);
-    }}
+            function createHeart() {{
+                let heart = document.createElement("div");
+                heart.className = "heart";
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+                document.body.appendChild(heart);
 
-    setInterval(createHeart, 300);
-    </script>
+                setTimeout(() => {{
+                    heart.remove();
+                }}, 5000);
+            }}
+
+            setInterval(createHeart, 300);
+        </script>
 
     </body>
     </html>
     """
 
+# ✅ IMPORTANT FOR RENDER
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
